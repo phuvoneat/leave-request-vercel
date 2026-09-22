@@ -41,14 +41,13 @@ export default async function handler(req, res) {
     };
     const submittedAt = new Date().toLocaleString("en-US", {
       timeZone: "Asia/Phnom_Penh",
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour: "numeric",
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
       minute: "2-digit",
-      second: "2-digit",
       hour12: false,
-    });
+    }).replace(/(\d+)\/(\d+)\/(\d+),?\s+(\d+):(\d+)/, "$2/$1/$3, $4:$5");
 
     const text =
       "📋 សំណើសុំច្បាប់\n\n" +
