@@ -29,11 +29,11 @@
 
   body {
     margin: 0;
-    background: var(--paper);
+    background: #fff;
     color: var(--ink);
     font-family: "Noto Sans Khmer", "Khmer OS", "Segoe UI", sans-serif;
     line-height: 1.6;
-    padding: 32px 16px 64px;
+    padding: 28px 16px 64px;
   }
 
   .sheet {
@@ -42,28 +42,33 @@
   }
 
   .letterhead {
-    background: var(--accent);
-    border-radius: 4px;
-    padding: 24px 28px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-top: 5px solid var(--accent);
+    border-radius: 2px;
+    padding: 22px 28px;
     margin-bottom: 20px;
     box-shadow: 0 2px 6px rgba(31, 49, 61, 0.12);
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+    text-align: left;
   }
 
   .letterhead .text {
-    flex: 1;
+    flex: none;
     min-width: 0;
+    width: auto;
   }
 
   .letterhead .logo {
     flex-shrink: 0;
     width: 56px;
     height: 56px;
-    border-radius: 4px;
-    background: rgba(255,255,255,0.92);
+    border-radius: 2px;
+    background: #f2f5f7;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -85,7 +90,7 @@
 
   .letterhead .eyebrow {
     font-size: 13px;
-    color: rgba(255,255,255,0.85);
+    color: var(--muted);
     letter-spacing: 0.02em;
     margin: 0 0 6px;
   }
@@ -95,21 +100,37 @@
     margin: 0;
     font-weight: 700;
     line-height: 1.45;
-    color: #ffffff;
+    color: var(--ink);
     font-family: "Khmer OS Moul Light", "Khmer OS Muol Light", "Khmer OS Moul", "Moul", serif;
   }
 
   form {
     background: var(--card);
     border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 12px 28px;
+    border-radius: 2px;
+    padding: 8px 28px 18px;
     box-shadow: 0 2px 6px rgba(31, 49, 61, 0.06);
   }
 
   .field {
-    padding: 12px 0;
+    padding: 16px 0;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
     margin: 0;
+    background: #fff;
+    transition: background 0.15s ease;
+  }
+
+  .form-section-title {
+    margin: 12px 0 0;
+    padding: 10px 0 6px;
+    border-bottom: 1px solid var(--accent);
+    color: var(--accent-dark);
+    font-size: 16px;
+    font-weight: 700;
   }
 
   .field label {
@@ -130,7 +151,7 @@
   .field textarea {
     width: 100%;
     border: 1px solid #b9c5cc;
-    border-radius: 3px;
+    border-radius: 6px;
     background: #fff;
     padding: 10px 11px;
     font-size: 14px;
@@ -144,7 +165,7 @@
   .field select:focus,
   .field textarea:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 2px rgba(31, 95, 139, 0.12);
+    box-shadow: 0 0 0 2px rgba(31, 95, 139, 0.1);
   }
 
     .date-picker {
@@ -220,7 +241,7 @@
     color: #fff;
     border: none;
     padding: 10px 22px;
-    border-radius: 3px;
+    border-radius: 2px;
     font-size: 14px;
     font-weight: 600;
     font-family: inherit;
@@ -245,15 +266,6 @@
   .status.ok { color: var(--c3); }
   .status.err { color: var(--error); }
 
-  .config-note {
-    max-width: 640px;
-    margin: 24px auto 0;
-    font-size: 13px;
-    color: var(--muted);
-    border-left: 3px solid var(--accent);
-    padding: 4px 16px;
-  }
-
   .confirm {
     display: none;
     background: #fff;
@@ -272,6 +284,9 @@
   .confirm p { margin: 0; color: #444; }
 
   @media (max-width: 480px) {
+    .letterhead { flex-direction: column; text-align: center; }
+    .letterhead .logo { order: -1; }
+    .letterhead .text { width: 100%; }
     .date-row { flex-direction: column; gap: 0; }
   }
 </style>
@@ -290,6 +305,8 @@
   </div>
 
   <form id="leaveForm" novalidate>
+    <div class="form-section-title">ព័ត៌មានអ្នកស្នើសុំ</div>
+
     <div class="field" style="--field-color: var(--c1);">
       <label for="name">ឈ្មោះ<span class="req">*</span></label>
       <input type="text" id="name" name="name">
@@ -322,6 +339,8 @@
       </select>
       <p class="hint">សូមបំពេញការិយាល័យ</p>
     </div>
+
+    <div class="form-section-title">ព័ត៌មានសុំច្បាប់</div>
 
     <div class="field" style="--field-color: var(--c3);">
       <label for="duration">រយៈពេលសុំច្បាប់<span class="req">*</span></label>
@@ -367,9 +386,6 @@
     <p>សំណើសុំច្បាប់របស់អ្នកត្រូវបានផ្ញើទៅក្រុមរួចរាល់។</p>
   </div>
 
-  <p class="config-note">
-    ទិន្នន័យនឹងត្រូវបានផ្ញើទៅ Telegram និងរក្សាទុកក្នុង Google Sheet តាមរយៈ Environment Variables នៅលើ Vercel។
-  </p>
 </div>
 
 <script>
