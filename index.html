@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ទម្រង់សុំច្បាប់</title>
+<style>
+  :root {
+    --ink: #2a2530;
+    --paper: #fff4e6;
+    --card: #ffffff;
+    --line: #f0e2c8;
+    --c1: #ff5d5d;   /* coral   - name/position */
+    --c2: #ffb648;   /* mustard - office */
+    --c3: #17b899;   /* teal    - duration */
+    --c4: #7c6bff;   /* violet  - reason */
+    --c5: #ff5da2;   /* pink    - dates */
+    --error: #d1274a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 8% 0%, #ffe1e1 0%, transparent 40%),
+      radial-gradient(circle at 100% 10%, #d8f5ec 0%, transparent 45%),
+      var(--paper);
+    color: var(--ink);
+    font-family: "Noto Sans Khmer", "Khmer OS", "Segoe UI", sans-serif;
+    line-height: 1.6;
+    padding: 40px 16px 80px;
+  }
+
+  .sheet {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .letterhead {
+    background: linear-gradient(100deg, var(--c1), var(--c5) 45%, var(--c4) 75%, var(--c3));
+    border-radius: 14px;
+    padding: 26px 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 24px -12px rgba(124, 107, 255, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .letterhead .text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .letterhead .logo {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+
+  .letterhead .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .letterhead .logo .placeholder {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--c1);
+  }
+
+  .letterhead .eyebrow {
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.02em;
+    margin: 0 0 6px;
+  }
+
+  .letterhead h1 {
+    font-size: 25px;
+    margin: 0;
+    font-weight: 700;
+    line-height: 1.45;
+    color: #ffffff;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.12);
+  }
+
+  form {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 6px 26px;
+    box-shadow: 0 14px 30px -20px rgba(42, 37, 48, 0.35);
+  }
+
+  .field {
+    padding: 20px 0 20px 16px;
+    border-bottom: 1px dashed var(--line);
+    border-left: 4px solid var(--field-color, var(--c1));
+    border-radius: 6px;
+    margin: 8px 0;
+    transition: background 0.15s ease;
+  }
+
+  .field:hover { background: color-mix(in srgb, var(--field-color, var(--c1)) 6%, transparent); }
+
+  .field:last-of-type { border-bottom: none; }
+
+  .field label {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--field-color, var(--c1));
+  }
+
+  .field label .req {
+    color: var(--error);
+    margin-left: 4px;
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #ece4d3;
+    background: transparent;
+    padding: 6px 2px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--ink);
+    outline: none;
+    resize: vertical;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    border-bottom: 2px solid var(--field-color, var(--c1));
+  }
+
+  .field .hint {
+    font-size: 12px;
+    color: var(--error);
+    margin-top: 6px;
+    display: none;
+  }
+
+  .field.invalid .hint { display: block; }
+  .field.invalid input,
+  .field.invalid textarea { border-bottom-color: var(--error); }
+
+  .date-row {
+    display: flex;
+    gap: 20px;
+  }
+
+  .date-row .field {
+    flex: 1;
+  }
+
+  .actions {
+    padding: 24px 0 28px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  button {
+    background: linear-gradient(120deg, var(--c1), var(--c5));
+    color: #fff;
+    border: none;
+    padding: 13px 30px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 8px 18px -8px rgba(255, 93, 93, 0.6);
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  button:hover:not(:disabled) {
+    background: linear-gradient(120deg, var(--c5), var(--c4));
+  }
+
+  .status {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .status.ok { color: var(--c3); }
+  .status.err { color: var(--error); }
+
+  .config-note {
+    max-width: 640px;
+    margin: 24px auto 0;
+    font-size: 13px;
+    color: #7a7086;
+    border-left: 3px solid var(--c4);
+    padding: 4px 16px;
+  }
+
+  .confirm {
+    display: none;
+    background: linear-gradient(120deg, #d8f5ec, #fff4e6);
+    border: 2px solid var(--c3);
+    border-radius: 14px;
+    padding: 26px 28px;
+    text-align: center;
+  }
+
+  .confirm h2 {
+    margin: 0 0 8px;
+    font-size: 19px;
+    color: var(--c3);
+  }
+
+  .confirm p { margin: 0; color: #444; }
+
+  @media (max-width: 480px) {
+    .date-row { flex-direction: column; gap: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="letterhead">
+    <div class="text">
+      <p class="eyebrow">ទម្រង់ផ្ទៃក្នុង</p>
+      <h1>ទម្រង់សុំច្បាប់នាយកដ្ឋានមុខងារ និងធនធាន</h1>
+    </div>
+    <div class="logo">
+      <img src="asset/img/Department Logo.jpg" alt="Department Logo">
+    </div>
+  </div>
+
+  <form id="leaveForm" novalidate>
+    <div class="field" style="--field-color: var(--c1);">
+      <label for="name">ឈ្មោះ<span class="req">*</span></label>
+      <input type="text" id="name" name="name">
+      <p class="hint">សូមបំពេញឈ្មោះ</p>
+    </div>
+
+    <div class="field" style="--field-color: var(--c1);">
+      <label for="position">តួនាទី<span class="req">*</span></label>
+      <input type="text" id="position" name="position">
+      <p class="hint">សូមបំពេញតួនាទី</p>
+    </div>
+
+    <div class="field" style="--field-color: var(--c2);">
+      <label for="office">ការិយាល័យ<span class="req">*</span></label>
+      <textarea id="office" name="office" rows="2"></textarea>
+      <p class="hint">សូមបំពេញការិយាល័យ</p>
+    </div>
+
+    <div class="field" style="--field-color: var(--c3);">
+      <label for="duration">រយៈពេលសុំច្បាប់<span class="req">*</span></label>
+      <input type="text" id="duration" name="duration" placeholder="ឧ. ៣ ថ្ងៃ">
+      <p class="hint">សូមបំពេញរយៈពេលសុំច្បាប់</p>
+    </div>
+
+    <div class="field" style="--field-color: var(--c4);">
+      <label for="reason">មូលហេតុ<span class="req">*</span></label>
+      <textarea id="reason" name="reason" rows="3"></textarea>
+      <p class="hint">សូមបំពេញមូលហេតុ</p>
+    </div>
+
+    <div class="date-row">
+      <div class="field" style="--field-color: var(--c5);">
+        <label for="fromDate">ចាប់ពីថ្ងៃទី<span class="req">*</span></label>
+        <input type="text" id="fromDate" name="fromDate" placeholder="ថ្ងៃ/ខែ/ឆ្នាំ" inputmode="numeric" maxlength="10">
+        <p class="hint">សូមបំពេញជាទម្រង់ ថ្ងៃ/ខែ/ឆ្នាំ</p>
+      </div>
+      <div class="field" style="--field-color: var(--c5);">
+        <label for="toDate">ដល់ថ្ងៃទី<span class="req">*</span></label>
+        <input type="text" id="toDate" name="toDate" placeholder="ថ្ងៃ/ខែ/ឆ្នាំ" inputmode="numeric" maxlength="10">
+        <p class="hint">សូមបំពេញជាទម្រង់ ថ្ងៃ/ខែ/ឆ្នាំ</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" id="submitBtn">ដាក់ស្នើ</button>
+      <span class="status" id="statusMsg"></span>
+    </div>
+  </form>
+
+  <div class="confirm" id="confirmBox">
+    <h2>បានដាក់ស្នើដោយជោគជ័យ</h2>
+    <p>សំណើសុំច្បាប់របស់អ្នកត្រូវបានផ្ញើទៅក្រុមរួចរាល់។</p>
+  </div>
+
+  <p class="config-note">
+    ការកំណត់ Telegram និង Google Sheet ត្រូវបានផ្លាស់ទីទៅ Environment Variables
+    នៅលើ Vercel (មិនមាននៅក្នុងឯកសារនេះទៀតទេ ដើម្បីសុវត្ថិភាព)។ សូមមើលឯកសារ README។
+  </p>
+</div>
+
+<script>
+  const form = document.getElementById("leaveForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const statusMsg = document.getElementById("statusMsg");
+  const confirmBox = document.getElementById("confirmBox");
+
+  const requiredFields = ["name", "position", "office", "duration", "reason", "fromDate", "toDate"];
+  const dateFields = ["fromDate", "toDate"];
+  const dateFormat = /^\d{2}\/\d{2}\/\d{4}$/;
+
+  dateFields.forEach((id) => {
+    const el = document.getElementById(id);
+    el.addEventListener("input", () => {
+      let digits = el.value.replace(/\D/g, "").slice(0, 8);
+      let out = digits;
+      if (digits.length > 4) {
+        out = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+      } else if (digits.length > 2) {
+        out = `${digits.slice(0, 2)}/${digits.slice(2)}`;
+      }
+      el.value = out;
+    });
+  });
+
+  function validate() {
+    let valid = true;
+    requiredFields.forEach((id) => {
+      const el = document.getElementById(id);
+      const wrapper = el.closest(".field");
+      const isDateField = dateFields.includes(id);
+      const filled = el.value.trim().length > 0;
+      const formatOk = isDateField ? dateFormat.test(el.value.trim()) : true;
+      if (!filled || !formatOk) {
+        wrapper.classList.add("invalid");
+        valid = false;
+      } else {
+        wrapper.classList.remove("invalid");
+      }
+    });
+    return valid;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    statusMsg.textContent = "";
+    statusMsg.className = "status";
+
+    if (!validate()) {
+      statusMsg.textContent = "សូមបំពេញព័ត៌មានដែលមានសញ្ញា * ឲ្យបានពេញលេញ";
+      statusMsg.classList.add("err");
+      return;
+    }
+
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "កំពុងផ្ញើ...";
+
+    try {
+      const res = await fetch("/api/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+
+      if (result.ok) {
+        form.style.display = "none";
+        confirmBox.style.display = "block";
+      } else {
+        throw new Error(result.error || "ការផ្ញើមិនបានជោគជ័យ");
+      }
+    } catch (err) {
+      statusMsg.textContent = "មិនអាចផ្ញើបានទេ សូមព្យាយាមម្តងទៀត (" + err.message + ")";
+      statusMsg.classList.add("err");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "ដាក់ស្នើ";
+    }
+  });
+</script>
+</body>
+</html>
