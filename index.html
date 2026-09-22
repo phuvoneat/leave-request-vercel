@@ -150,6 +150,39 @@
     border-bottom: 2px solid var(--field-color, var(--c1));
   }
 
+    .date-picker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid #ece4d3;
+    }
+
+    .date-picker input[type="text"] { border-bottom: none; }
+
+    .date-picker input[type="date"] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .picker-button {
+      flex: 0 0 auto;
+      padding: 4px 6px;
+      background: transparent;
+      color: var(--field-color, var(--c5));
+      border: none;
+      box-shadow: none;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .picker-button:hover:not(:disabled) {
+      background: transparent;
+      color: var(--c4);
+    }
+
   .field .hint {
     font-size: 12px;
     color: var(--error);
@@ -300,12 +333,20 @@
     <div class="date-row">
       <div class="field" style="--field-color: var(--c5);">
         <label for="fromDate">ចាប់ពីថ្ងៃទី<span class="req">*</span></label>
-        <input type="date" id="fromDate" name="fromDate" aria-label="ថ្ងៃ/ខែ/ឆ្នាំ">
+         <div class="date-picker">
+           <input type="text" id="fromDate" name="fromDate" placeholder="ថ្ងៃ/ខែ/ឆ្នាំ" inputmode="numeric" maxlength="10">
+           <button type="button" class="picker-button" data-picker="fromDatePicker" aria-label="ជ្រើសរើសថ្ងៃ">📅</button>
+           <input type="date" id="fromDatePicker" tabindex="-1" aria-hidden="true">
+         </div>
         <p class="hint">សូមបំពេញជាទម្រង់ ថ្ងៃ/ខែ/ឆ្នាំ</p>
       </div>
       <div class="field" style="--field-color: var(--c5);">
         <label for="toDate">ដល់ថ្ងៃទី<span class="req">*</span></label>
-        <input type="date" id="toDate" name="toDate" aria-label="ថ្ងៃ/ខែ/ឆ្នាំ">
+          <div class="date-picker">
+            <input type="text" id="toDate" name="toDate" placeholder="ថ្ងៃ/ខែ/ឆ្នាំ" inputmode="numeric" maxlength="10">
+            <button type="button" class="picker-button" data-picker="toDatePicker" aria-label="ជ្រើសរើសថ្ងៃ">📅</button>
+            <input type="date" id="toDatePicker" tabindex="-1" aria-hidden="true">
+          </div>
         <p class="hint">សូមបំពេញជាទម្រង់ ថ្ងៃ/ខែ/ឆ្នាំ</p>
       </div>
     </div>
@@ -334,9 +375,42 @@
 
   const requiredFields = ["name", "position", "office", "duration", "reason", "fromDate", "toDate"];
   const dateFields = ["fromDate", "toDate"];
+
+    document.querySelectorAll(".picker-button").forEach((button) => {
+      const picker = document.getElementById(button.dataset.picker);
+      const target = document.getElementById(button.dataset.picker.replace("Picker", ""));
+
+      button.addEventListener("click", () => {
+        if (typeof picker.showPicker === "function") {
+          picker.showPicker();
+        } else {
+          picker.focus();
+        }
+      });
+
+      picker.addEventListener("change", () => {
+        const [year, month, day] = picker.value.split("-");
+        target.value = year && month && day ? `${day}/${month}/${year}` : "";
+        target.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    });
+
+    dateFields.forEach((id) => {
+      const el = document.getElementById(id);
+      el.addEventListener("input", () => {
+        const digits = el.value.replace(/\D/g, "").slice(0, 8);
+        if (digits.length > 4) {
+          el.value = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+        } else if (digits.length > 2) {
+          el.value = `${digits.slice(0, 2)}/${digits.slice(2)}`;
+        } else {
+          el.value = digits;
+        }
+      });
+    });
+
   function formatDateForPayload(value) {
-    const [year, month, day] = value.split("-");
-    return year && month && day ? `${day}/${month}/${year}` : "";
+      return value;
   }
 
   function validate() {
@@ -346,7 +420,7 @@
       const wrapper = el.closest(".field");
       const isDateField = dateFields.includes(id);
       const filled = el.value.trim().length > 0;
-      const formatOk = isDateField ? /^\d{4}-\d{2}-\d{2}$/.test(el.value.trim()) : true;
+      const formatOk = isDateField ? /^\d{2}\/\d{2}\/\d{4}$/.test(el.value.trim()) : true;
       if (!filled || !formatOk) {
         wrapper.classList.add("invalid");
         valid = false;
