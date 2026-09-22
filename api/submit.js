@@ -35,16 +35,31 @@ export default async function handler(req, res) {
   }
 
   try {
+    const displayDate = (value) => {
+      const [day, month, year] = String(value || "").split("/");
+      return day && month && year ? `${Number(month)}/${Number(day)}/${year}` : "-";
+    };
+    const submittedAt = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Phnom_Penh",
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+
     const text =
-      "📋 សំណើសុំច្បាប់ថ្មី\n\n" +
-      `ឈ្មោះ: ${name || "-"}\n` +
-      `តួនាទី: ${position}\n` +
-      `រយៈពេលសុំច្បាប់: ${duration}\n` +
-      `ចាប់ពីថ្ងៃទី: ${fromDate}\n` +
-      `ដល់ថ្ងៃទី: ${toDate}\n` +
-      `ធ្វើនៅថ្ងៃទី: ${performedDate || "-"}\n` +
-      `ការិយាល័យ: ${office}\n` +
-      `មូលហេតុ: ${reason}`;
+      `Message ឈ្មោះ ៖ ${name || "-"}\n` +
+      `តួនាទី ៖ ${position}\n` +
+      `ការិយាល័យ ៖ ${office}\n` +
+      `ស្នើសុំអនុញ្ញាតច្បាប់ ៖ ${duration}\n` +
+      `ចាប់ពីថ្ងៃទី ៖ ${displayDate(fromDate)}\n` +
+      `ដល់ថ្ងៃទី ៖ ${displayDate(toDate)}\n` +
+      `មូលហេតុ ៖ ${reason}\n\n` +
+      "____________________________________\n" +
+      `ធ្វើនៅថ្ងៃទី ៖ ${submittedAt}`;
 
     const sheetData = {
       timestamp: new Date().toISOString(),
