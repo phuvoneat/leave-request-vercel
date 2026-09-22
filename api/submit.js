@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     }
   }
 
-  const { name, position, office, duration, reason, fromDate, toDate } = body;
+  const { name, position, office, duration, reason, fromDate, toDate, performedDate } = body;
 
   const dateFormat = /^\d{2}\/\d{2}\/\d{4}$/;
   const required = { name, position, office, duration, reason, fromDate, toDate };
@@ -25,76 +25,35 @@ export default async function handler(req, res) {
     return;
   }
 
-  const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-  const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
   const SHEET_WEBHOOK_URL = process.env.SHEET_WEBHOOK_URL;
 
-  if (!BOT_TOKEN || !CHAT_ID) {
-    res.status(500).json({ ok: false, error: "Server is missing TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID" });
+  if (!SHEET_WEBHOOK_URL) {
+    res.status(500).json({ ok: false, error: "Server is missing SHEET_WEBHOOK_URL" });
     return;
   }
 
-  const text =
-    "📋 សំណើសុំច្បាប់ថ្មី\n\n" +
-    `ឈ្មោះ: ${name || "-"}\n` +
-    `តួនាទី: ${position}\n` +
-    `ការិយាល័យ: ${office}\n` +
-    `រយៈពេលសុំច្បាប់: ${duration}\n` +
-    `មូលហេតុ: ${reason}\n` +
-    `ចាប់ពីថ្ងៃទី: ${fromDate}\n` +
-    `ដល់ថ្ងៃទី: ${toDate}`;
-
   try {
-    const tgRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    const sheetData = {
+      timestamp: new Date().toISOString(),
+      name: name || "",
+      position,
+      duration,
+      fromDate,
+      toDate,
+      performedDate: performedDate || "",
+      office,
+      reason,
+    };
+
+    const sheetRes = await fetch(SHEET_WEBHOOK_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: CHAT_ID, text }),
+      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+      body: new URLSearchParams(sheetData).toString(),
     });
 
-    let tgData = {};
-    try {
-      tgData = await tgRes.json();
-    } catch {
-      tgData = {};
-    }
-
-    if (!tgRes.ok || !tgData.ok) {
-      res.status(502).json({ ok: false, error: tgData.description || "Telegram rejected the message" });
+    if (!sheetRes.ok) {
+      res.status(502).json({ ok: false, error: "Google Sheet rejected the submission" });
       return;
-    }
-
-    if (SHEET_WEBHOOK_URL) {
-      try {
-        const sheetData = {
-          timestamp: new Date().toISOString(),
-          name: name || "",
-          position,
-          office,
-          duration,
-          reason,
-          fromDate,
-          toDate,
-        };
-
-        const formBody = new URLSearchParams(sheetData).toString();
-
-        const sheetRes = await fetch(SHEET_WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-          body: formBody,
-        });
-
-        if (!sheetRes.ok) {
-          await fetch(SHEET_WEBHOOK_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(sheetData),
-          });
-        }
-      } catch (err) {
-        // Best-effort only — don't fail the whole request over the Sheet save
-        console.warn("Sheet save failed:", err);
-      }
     }
 
     res.status(200).json({ ok: true });
