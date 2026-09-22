@@ -50,11 +50,32 @@ export default async function handler(req, res) {
 
     if (SHEET_WEBHOOK_URL) {
       try {
-        await fetch(SHEET_WEBHOOK_URL, {
+        const sheetData = {
+          timestamp: new Date().toISOString(),
+          name: name || "",
+          position,
+          office,
+          duration,
+          reason,
+          fromDate,
+          toDate,
+        };
+
+        const formBody = new URLSearchParams(sheetData).toString();
+
+        const sheetRes = await fetch(SHEET_WEBHOOK_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({ name: name || "", position, office, duration, reason, fromDate, toDate }).toString(),
+          headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+          body: formBody,
         });
+
+        if (!sheetRes.ok) {
+          await fetch(SHEET_WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(sheetData),
+          });
+        }
       } catch (err) {
         // Best-effort only — don't fail the whole request over the Sheet save
         console.warn("Sheet save failed:", err);
