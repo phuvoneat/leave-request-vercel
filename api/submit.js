@@ -4,7 +4,16 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { name, position, office, duration, reason, fromDate, toDate } = req.body || {};
+  let body = req.body || {};
+  if (typeof body === "string") {
+    try {
+      body = JSON.parse(body);
+    } catch {
+      body = {};
+    }
+  }
+
+  const { name, position, office, duration, reason, fromDate, toDate } = body;
 
   const dateFormat = /^\d{2}\/\d{2}\/\d{4}$/;
   const required = { name, position, office, duration, reason, fromDate, toDate };
@@ -41,9 +50,15 @@ export default async function handler(req, res) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ chat_id: CHAT_ID, text }),
     });
-    const tgData = await tgRes.json();
 
-    if (!tgData.ok) {
+    let tgData = {};
+    try {
+      tgData = await tgRes.json();
+    } catch {
+      tgData = {};
+    }
+
+    if (!tgRes.ok || !tgData.ok) {
       res.status(502).json({ ok: false, error: tgData.description || "Telegram rejected the message" });
       return;
     }
