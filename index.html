@@ -130,6 +130,7 @@
   }
 
   .field input,
+  .field select,
   .field textarea {
     width: 100%;
     border: none;
@@ -144,6 +145,7 @@
   }
 
   .field input:focus,
+  .field select:focus,
   .field textarea:focus {
     border-bottom: 2px solid var(--field-color, var(--c1));
   }
@@ -258,13 +260,28 @@
 
     <div class="field" style="--field-color: var(--c1);">
       <label for="position">តួនាទី<span class="req">*</span></label>
-      <input type="text" id="position" name="position">
+      <select id="position" name="position">
+        <option value="">ជ្រើសរើសតួនាទី</option>
+        <option value="អនុប្រធាននាយកដ្ឋាន">អនុប្រធាននាយកដ្ឋាន</option>
+        <option value="ប្រធានាការិយាល័យ">ប្រធានាការិយាល័យ</option>
+        <option value="អនុប្រធានការិយាល័យ">អនុប្រធានការិយាល័យ</option>
+        <option value="មន្ត្រី">មន្ត្រី</option>
+        <option value="មន្រីជាប់កិច្ចសន្យា">មន្រីជាប់កិច្ចសន្យា</option>
+        <option value="បុក្គលិកកិច្ចសន្យា">បុក្គលិកកិច្ចសន្យា</option>
+        <option value="បុគ្គលិកស្ម័គ្រចិត្ត">បុគ្គលិកស្ម័គ្រចិត្ត</option>
+      </select>
       <p class="hint">សូមបំពេញតួនាទី</p>
     </div>
 
     <div class="field" style="--field-color: var(--c2);">
       <label for="office">ការិយាល័យ<span class="req">*</span></label>
-      <textarea id="office" name="office" rows="2"></textarea>
+      <select id="office" name="office">
+        <option value="">ជ្រើសរើសការិយាល័យ</option>
+        <option value="ការិយាល័យរដ្ឋបាល">ការិយាល័យរដ្ឋបាល</option>
+        <option value="ការិយាល័យកិច្ចការច្រកចេញចូលតែមួយ">ការិយាល័យកិច្ចការច្រកចេញចូលតែមួយ</option>
+        <option value="ការិយាល័យត្រួតពិនិត្យ តាមដាន និងវាយតម្លៃ">ការិយាល័យត្រួតពិនិត្យ តាមដាន និងវាយតម្លៃ</option>
+        <option value="ការិយាល័យមុខងារ និងធាន">ការិយាល័យមុខងារ និងធាន</option>
+      </select>
       <p class="hint">សូមបំពេញការិយាល័យ</p>
     </div>
 
@@ -283,12 +300,12 @@
     <div class="date-row">
       <div class="field" style="--field-color: var(--c5);">
         <label for="fromDate">ចាប់ពីថ្ងៃទី<span class="req">*</span></label>
-        <input type="text" id="fromDate" name="fromDate" placeholder="ថ្ងៃ/ខែ/ឆ្នាំ" inputmode="numeric" maxlength="10">
+        <input type="date" id="fromDate" name="fromDate" aria-label="ថ្ងៃ/ខែ/ឆ្នាំ">
         <p class="hint">សូមបំពេញជាទម្រង់ ថ្ងៃ/ខែ/ឆ្នាំ</p>
       </div>
       <div class="field" style="--field-color: var(--c5);">
         <label for="toDate">ដល់ថ្ងៃទី<span class="req">*</span></label>
-        <input type="text" id="toDate" name="toDate" placeholder="ថ្ងៃ/ខែ/ឆ្នាំ" inputmode="numeric" maxlength="10">
+        <input type="date" id="toDate" name="toDate" aria-label="ថ្ងៃ/ខែ/ឆ្នាំ">
         <p class="hint">សូមបំពេញជាទម្រង់ ថ្ងៃ/ខែ/ឆ្នាំ</p>
       </div>
     </div>
@@ -317,21 +334,10 @@
 
   const requiredFields = ["name", "position", "office", "duration", "reason", "fromDate", "toDate"];
   const dateFields = ["fromDate", "toDate"];
-  const dateFormat = /^\d{2}\/\d{2}\/\d{4}$/;
-
-  dateFields.forEach((id) => {
-    const el = document.getElementById(id);
-    el.addEventListener("input", () => {
-      let digits = el.value.replace(/\D/g, "").slice(0, 8);
-      let out = digits;
-      if (digits.length > 4) {
-        out = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
-      } else if (digits.length > 2) {
-        out = `${digits.slice(0, 2)}/${digits.slice(2)}`;
-      }
-      el.value = out;
-    });
-  });
+  function formatDateForPayload(value) {
+    const [year, month, day] = value.split("-");
+    return year && month && day ? `${day}/${month}/${year}` : "";
+  }
 
   function validate() {
     let valid = true;
@@ -340,7 +346,7 @@
       const wrapper = el.closest(".field");
       const isDateField = dateFields.includes(id);
       const filled = el.value.trim().length > 0;
-      const formatOk = isDateField ? dateFormat.test(el.value.trim()) : true;
+      const formatOk = isDateField ? /^\d{4}-\d{2}-\d{2}$/.test(el.value.trim()) : true;
       if (!filled || !formatOk) {
         wrapper.classList.add("invalid");
         valid = false;
@@ -363,6 +369,9 @@
     }
 
     const data = Object.fromEntries(new FormData(form).entries());
+    dateFields.forEach((id) => {
+      data[id] = formatDateForPayload(data[id]);
+    });
 
     submitBtn.disabled = true;
     submitBtn.textContent = "កំពុងផ្ញើ...";
