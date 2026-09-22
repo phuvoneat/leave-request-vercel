@@ -44,8 +44,11 @@ token and chat ID in the environment variables below.
    }
    ```
 
-3. **Deploy → New deployment → Web app → execute as "Me" → who has access
-   "Anyone" → Deploy.** Copy the URL ending in `/exec`.
+3. **Deploy → New deployment → Web app → Execute as "Me" → Who has access
+   "Anyone" → Deploy.** If the deployment already exists, use **Manage
+   deployments → Edit**, select **Anyone**, and deploy a new version. Copy the
+   URL ending in `/exec`. Opening this URL in a private browser window must not
+   redirect to Google sign-in.
 
    <!-- https://script.google.com/macros/s/AKfycbwF191GFxhz3TxENwUejJ5mPW6SzjUC2cI6HIfa3nAa5G1EmMLsKRYi7EJeMr8_u3t-/exec -->
 

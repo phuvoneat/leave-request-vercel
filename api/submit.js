@@ -83,8 +83,8 @@ export default async function handler(req, res) {
       return;
     }
 
-    if (!sheetRes.ok) {
-      res.status(502).json({ ok: false, error: "Google Sheet rejected the submission" });
+    if (!sheetRes.ok || sheetRes.url.includes("accounts.google.com")) {
+      res.status(502).json({ ok: false, error: "Google Sheet webhook is not public. Deploy the Apps Script as a Web app for Anyone." });
       return;
     }
 
