@@ -7,30 +7,30 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23ff5d5d'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='34' font-weight='700' fill='white' font-family='Arial, sans-serif'%3EL%3C/text%3E%3C/svg%3E">
 <style>
   :root {
-    --ink: #2a2530;
-    --paper: #fff4e6;
+    --ink: #263238;
+    --paper: #f4f6f8;
     --card: #ffffff;
-    --line: #f0e2c8;
+    --line: #d9e0e5;
+    --accent: #1f5f8b;
+    --accent-dark: #17496d;
+    --muted: #60717d;
     --c1: #ff5d5d;   /* coral   - name/position */
     --c2: #ffb648;   /* mustard - office */
     --c3: #17b899;   /* teal    - duration */
     --c4: #7c6bff;   /* violet  - reason */
     --c5: #ff5da2;   /* pink    - dates */
-    --error: #d1274a;
+    --error: #b42318;
   }
 
   * { box-sizing: border-box; }
 
   body {
     margin: 0;
-    background:
-      radial-gradient(circle at 8% 0%, #ffe1e1 0%, transparent 40%),
-      radial-gradient(circle at 100% 10%, #d8f5ec 0%, transparent 45%),
-      var(--paper);
+    background: var(--paper);
     color: var(--ink);
     font-family: "Noto Sans Khmer", "Khmer OS", "Segoe UI", sans-serif;
     line-height: 1.6;
-    padding: 40px 16px 80px;
+    padding: 32px 16px 64px;
   }
 
   .sheet {
@@ -39,11 +39,11 @@
   }
 
   .letterhead {
-    background: linear-gradient(100deg, var(--c1), var(--c5) 45%, var(--c4) 75%, var(--c3));
-    border-radius: 14px;
-    padding: 26px 28px;
-    margin-bottom: 24px;
-    box-shadow: 0 10px 24px -12px rgba(124, 107, 255, 0.45);
+    background: var(--accent);
+    border-radius: 4px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(31, 49, 61, 0.12);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -59,12 +59,12 @@
     flex-shrink: 0;
     width: 56px;
     height: 56px;
-    border-radius: 50%;
+    border-radius: 4px;
     background: rgba(255,255,255,0.92);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: none;
     overflow: hidden;
   }
 
@@ -88,40 +88,33 @@
   }
 
   .letterhead h1 {
-    font-size: 25px;
+    font-size: 23px;
     margin: 0;
     font-weight: 700;
     line-height: 1.45;
     color: #ffffff;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.12);
+    font-family: "Khmer OS Moul Light", "Khmer OS Muol Light", "Khmer OS Moul", serif;
   }
 
   form {
     background: var(--card);
-    border-radius: 14px;
-    padding: 6px 26px;
-    box-shadow: 0 14px 30px -20px rgba(42, 37, 48, 0.35);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 12px 28px;
+    box-shadow: 0 2px 6px rgba(31, 49, 61, 0.06);
   }
 
   .field {
-    padding: 20px 0 20px 16px;
-    border-bottom: 1px dashed var(--line);
-    border-left: 4px solid var(--field-color, var(--c1));
-    border-radius: 6px;
-    margin: 8px 0;
-    transition: background 0.15s ease;
+    padding: 12px 0;
+    margin: 0;
   }
-
-  .field:hover { background: color-mix(in srgb, var(--field-color, var(--c1)) 6%, transparent); }
-
-  .field:last-of-type { border-bottom: none; }
 
   .field label {
     display: block;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--field-color, var(--c1));
+    margin-bottom: 6px;
+    color: var(--ink);
   }
 
   .field label .req {
@@ -133,11 +126,11 @@
   .field select,
   .field textarea {
     width: 100%;
-    border: none;
-    border-bottom: 2px solid #ece4d3;
-    background: transparent;
-    padding: 6px 2px;
-    font-size: 15px;
+    border: 1px solid #b9c5cc;
+    border-radius: 3px;
+    background: #fff;
+    padding: 10px 11px;
+    font-size: 14px;
     font-family: inherit;
     color: var(--ink);
     outline: none;
@@ -147,31 +140,34 @@
   .field input:focus,
   .field select:focus,
   .field textarea:focus {
-    border-bottom: 2px solid var(--field-color, var(--c1));
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(31, 95, 139, 0.12);
   }
 
     .date-picker {
       display: flex;
       align-items: center;
       gap: 8px;
-      border-bottom: 2px solid #ece4d3;
+      border: 1px solid #b9c5cc;
+      border-radius: 3px;
+      background: #fff;
     }
 
-    .date-picker input[type="text"] { border-bottom: none; }
+    .date-picker input[type="text"] { border: none; }
 
     .date-picker input[type="date"] {
       position: absolute;
       width: 1px;
       height: 1px;
       opacity: 0;
-      pointer-events: none;
+      pointer-events: auto;
     }
 
     .picker-button {
       flex: 0 0 auto;
       padding: 4px 6px;
       background: transparent;
-      color: var(--field-color, var(--c5));
+      color: var(--accent);
       border: none;
       box-shadow: none;
       font-size: 20px;
@@ -180,7 +176,7 @@
 
     .picker-button:hover:not(:disabled) {
       background: transparent;
-      color: var(--c4);
+      color: var(--accent-dark);
     }
 
   .field .hint {
@@ -192,7 +188,8 @@
 
   .field.invalid .hint { display: block; }
   .field.invalid input,
-  .field.invalid textarea { border-bottom-color: var(--error); }
+  .field.invalid select,
+  .field.invalid textarea { border-color: var(--error); }
 
   .date-row {
     display: flex;
@@ -204,23 +201,23 @@
   }
 
   .actions {
-    padding: 24px 0 28px 16px;
+    padding: 20px 0 16px;
     display: flex;
     align-items: center;
     gap: 16px;
   }
 
   button {
-    background: linear-gradient(120deg, var(--c1), var(--c5));
+    background: var(--accent);
     color: #fff;
     border: none;
-    padding: 13px 30px;
-    border-radius: 999px;
-    font-size: 15px;
+    padding: 10px 22px;
+    border-radius: 3px;
+    font-size: 14px;
     font-weight: 600;
     font-family: inherit;
     cursor: pointer;
-    box-shadow: 0 8px 18px -8px rgba(255, 93, 93, 0.6);
+    box-shadow: none;
   }
 
   button:disabled {
@@ -229,7 +226,7 @@
   }
 
   button:hover:not(:disabled) {
-    background: linear-gradient(120deg, var(--c5), var(--c4));
+    background: var(--accent-dark);
   }
 
   .status {
@@ -244,16 +241,16 @@
     max-width: 640px;
     margin: 24px auto 0;
     font-size: 13px;
-    color: #7a7086;
-    border-left: 3px solid var(--c4);
+    color: var(--muted);
+    border-left: 3px solid var(--accent);
     padding: 4px 16px;
   }
 
   .confirm {
     display: none;
-    background: linear-gradient(120deg, #d8f5ec, #fff4e6);
-    border: 2px solid var(--c3);
-    border-radius: 14px;
+    background: #fff;
+    border: 1px solid #9ac8b0;
+    border-radius: 4px;
     padding: 26px 28px;
     text-align: center;
   }
@@ -261,7 +258,7 @@
   .confirm h2 {
     margin: 0 0 8px;
     font-size: 19px;
-    color: var(--c3);
+    color: #18794e;
   }
 
   .confirm p { margin: 0; color: #444; }
@@ -384,7 +381,7 @@
         if (typeof picker.showPicker === "function") {
           picker.showPicker();
         } else {
-          picker.focus();
+          picker.click();
         }
       });
 
