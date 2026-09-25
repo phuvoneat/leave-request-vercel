@@ -37,17 +37,19 @@ export default async function handler(req, res) {
   try {
     const displayDate = (value) => {
       const [day, month, year] = String(value || "").split("/");
-      return day && month && year ? `${Number(month)}/${Number(day)}/${year}` : "-";
+      return day && month && year
+        ? `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`
+        : "-";
     };
-    const submittedAt = new Date().toLocaleString("en-US", {
+    const submittedAt = new Intl.DateTimeFormat("en-GB", {
       timeZone: "Asia/Phnom_Penh",
-      year: "2-digit",
-      month: "2-digit",
       day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
-    }).replace(/(\d+)\/(\d+)\/(\d+),?\s+(\d+):(\d+)/, "$2/$1/$3, $4:$5");
+    }).format(new Date());
 
     const text =
       "📋 សំណើសុំច្បាប់\n\n" +
