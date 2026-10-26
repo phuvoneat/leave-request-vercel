@@ -21,7 +21,7 @@ token and chat ID in the environment variables below.
 ## 2. Set up the Google Sheet
 
 1. Create a Google Sheet with this header row:
-   `Timestamp | ឈ្មោះ | តួនាទី | រយៈពេលសុំច្បាប់ | ចាប់ពីថ្ងៃទី | ដល់ថ្ងៃទី | ធ្វើនៅថ្ងៃទី | ការិយាល័យ | មូលហេតុ`
+   `Timestamp | ឈ្មោះ | តួនាទី | រយៈពេលសុំច្បាប់ | ចំនួនថ្ងៃឈប់សរុប | ចាប់ពីថ្ងៃទី | ដល់ថ្ងៃទី | ធ្វើនៅថ្ងៃទី | ការិយាល័យ | មូលហេតុ`
 2. In the sheet: **Extensions → Apps Script**, delete the placeholder code,
    and paste:
 
@@ -34,6 +34,7 @@ token and chat ID in the environment variables below.
        p.name || "",
        p.position || "",
        p.duration || "",
+      p.totalDays || "",
        p.fromDate || "",
        p.toDate || "",
       p.performedDate || "",
