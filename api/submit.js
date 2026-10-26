@@ -58,7 +58,7 @@ export default async function handler(req, res) {
       `តួនាទី ៖ ${position}\n` +
       `ការិយាល័យ ៖ ${office}\n` +
       `ស្នើសុំអនុញ្ញាតច្បាប់ ៖ ${duration}\n` +
-      `ចំនួនថ្ងៃឈប់សរុប ៖ ${totalDays} ថ្ងៃ\n` +
+      `ចំនួនថ្ងៃឈប់សរុប ៖ ${totalDays}\n` +
       `ចាប់ពីថ្ងៃទី ៖ ${displayDate(fromDate)}\n` +
       `ដល់ថ្ងៃទី ៖ ${displayDate(toDate)}\n` +
       `មូលហេតុ ៖ ${reason}\n\n` +
