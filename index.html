@@ -349,8 +349,8 @@
     </div>
 
     <div class="field" style="--field-color: var(--c3);">
-      <label for="totalDays">ចំនួនថ្ងៃឈប់សរុប<span>*</span></label>
-      <input type="number" id="totalDays" name="totalDays" min="1" step="1" inputmode="numeric" placeholder="ឧ. ៣">
+      <label for="totalDays">ចំនួនថ្ងៃឈប់សរុប<span class="req">*</span></label>
+      <input type="text" id="totalDays" name="totalDays" placeholder="ឧ. ៣ ថ្ងៃ" required>
       <p class="hint">សូមបំពេញចំនួនថ្ងៃឈប់សរុប</p>
     </div>
 
@@ -448,10 +448,7 @@
       const isDateField = dateFields.includes(id);
       const filled = el.value.trim().length > 0;
       const formatOk = isDateField ? /^\d{2}\/\d{2}\/\d{4}$/.test(el.value.trim()) : true;
-      const totalDaysOk = id === "totalDays" && (!Number.isInteger(Number(el.value)) || Number(el.value) < 1)
-        ? false
-        : true;
-      if (!filled || !formatOk || !totalDaysOk) {
+      if (!filled || !formatOk) {
         wrapper.classList.add("invalid");
         valid = false;
       } else {

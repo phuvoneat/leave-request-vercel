@@ -18,10 +18,9 @@ export default async function handler(req, res) {
   const dateFormat = /^\d{2}\/\d{2}\/\d{4}$/;
   const required = { name, position, office, duration, totalDays, reason, fromDate, toDate };
   const missing = Object.entries(required).some(([, v]) => !v || !String(v).trim());
-  const invalidTotalDays = !Number.isInteger(Number(totalDays)) || Number(totalDays) < 1;
   const badDates = !dateFormat.test(fromDate || "") || !dateFormat.test(toDate || "");
 
-  if (missing || invalidTotalDays || badDates) {
+  if (missing || badDates) {
     res.status(400).json({ ok: false, error: "Missing or invalid fields" });
     return;
   }
